@@ -1,0 +1,88 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            
+            <h1 class="display-4 fw-bold">{{ post.title }}</h1>
+            <p class="text-muted">
+                <span class="badge bg-warning text-dark">{{ post.category.title }}</span> | 
+                Publicado el {{ post.created_at|date:"d M, Y" }}
+            </p>
+
+            {% if post.image %}
+                <img src="{{ post.image.url }}" class="img-fluid rounded shadow-sm mb-4" alt="{{ post.title }}">
+            {% endif %}
+
+            {% if post.specs.all %}
+            <div class="card bg-light mb-4 border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold mb-3">Ficha Técnica</h5>
+                    <div class="row">
+                        {% for spec in post.specs.all %}
+                        <div class="col-6 mb-2">
+                            <span class="text-muted d-block small text-uppercase">{{ spec.label }}</span>
+                            <span class="fw-bold">{{ spec.value }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="post-body fs-5 mb-5" style="line-height: 1.8;">
+                {{ post.body|linebreaks }}
+            </div>
+
+            <hr class="my-5">
+
+            <h3 class="fw-bold mb-4">Comentarios ({{ post.comments.count }})</h3>
+            
+            {% for comment in post.comments.all %}
+                <div class="card mb-3 shadow-sm border-0">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h6 class="fw-bold mb-1 text-primary">{{ comment.name }}</h6>
+                            <small class="text-muted">{{ comment.created_at|timesince }} ago</small>
+                        </div>
+                        <p class="mb-0 text-dark">{{ comment.body }}</p>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="alert alert-light border italic">
+                    No hay comentarios aún. ¡Sé el primero en compartir tu opinión!
+                </div>
+            {% endfor %}
+
+            <hr class="my-5">
+
+            <div class="card border-0 bg-dark text-white p-4 mb-5">
+                <h4 class="mb-4">Deja un comentario</h4>
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        {{ form.as_p }}
+                    </div>
+
+                    <button type="submit" class="btn btn-warning fw-bold px-4">
+                        Publicar Comentario
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    form p label { display: block; margin-top: 10px; font-weight: bold; }
+    form p input, form p textarea { 
+        width: 100%; 
+        padding: 8px; 
+        border-radius: 5px; 
+        border: 1px solid #ced4da;
+    }
+</style>
+{% endblock %}
