@@ -6,7 +6,7 @@ class Category(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, unique=True, null=True, blank=True)
     # Nuevo campo para el color (puedes poner 'yellow', 'blue', o códigos HEX)
-    color_hex = models.CharField(max_length=7, default="#743390") 
+    color_hex = models.CharField(max_length=7, default="#698CDD") 
 
     def __str__(self):
         return self.title
